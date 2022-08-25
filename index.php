@@ -28,7 +28,7 @@
             if(isset($_GET["page"])) {
                 if(($_GET["page"]) == "create") {
                     include("products/create.php");
-                } else if(($_GET["page"]) == "update") {
+                } else if(($_GET["page"]) == "edit") {
                     include("products/edit.php");
                 } else if(($_GET["page"]) == "categories") {
                     include("categories/index.php");
@@ -38,6 +38,7 @@
             }
 
         ?>
+        
     </div>
 </body>
 </html>

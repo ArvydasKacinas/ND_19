@@ -52,6 +52,37 @@ class productsDatabase extends DatabaseConnection{
         return $this->categories;
     }
 
+    public function createCategory() {
+        if(isset($_POST["katPatvirtinti"])) {
+            $categories = array(
+                "title" => $_POST["title"],
+                "description" => $_POST["description"]
+            );
+            $categories["title"] = '"' . $categories["title"] . '"';
+            $categories["description"] = '"' . $categories["description"] . '"';
+            $this->insertAction("categories", ["title", "description"],[$categories["title"], $categories["description"]]);
+        }
+    }
+
+    public function selectOneCategory() {
+        if(isset($_GET["page"]) && ($_GET["page"] == "edit" && isset($_GET["id"]))) {
+            $categories = $this->selectOneAction("categories", $_GET["id"]);
+            return $categories;
+            
+        }
+    }
+
+    public function editCategory() {
+        if(isset($_POST["redaguoti"])) {
+            $categories = array(
+                "title" => $_POST["title"],
+                "description" => $_POST["description"],
+            );
+            $this->updateAction("categories", $_POST["id"] , $categories);
+           header("Location: index.php");
+        }
+    }
+
     public function createProduct() {
         if(isset($_POST["patvirtinti"])) {
             $products = array(
@@ -98,6 +129,16 @@ class productsDatabase extends DatabaseConnection{
            header("Location: index.php");
         }
     }
+
+    // public function randomEntry() {
+    //     if(isset($_POST["generuoti"])) {
+    //         for($i = 1; $i <= 150; $i++) {
+    //             $pricing=rand(100,1000);
+    //             $categoryChoosing=rand(1,3);
+    //             $sql="INSERT INTO `products`(`id`, `title`, `description`, `price`, `category_id`, `image_url`) VALUES ('$i','title.$i','','$pricing','$categoryChoosing','')";
+    //             echo "ok";
+    //         }
+    // }}
 } 
 
 

@@ -24,5 +24,8 @@
         <?php $products->deleteProduct(); ?>
         
     </table>
+    
+    <!-- <button class="btn btn-primary" type="submit" name="generuoti">Generuoti</button> -->
+
 </body>
 </html>

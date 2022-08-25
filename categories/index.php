@@ -1,4 +1,4 @@
-<?php include("classes/productsDatabase-class.php"); ?>
+<?php include("classes/categoriesDatabase-class.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +15,7 @@
             <th>Title</th>
             <th>Description</th>
         </tr>
-        <?php $categories = new productsDatabase();
+        <?php $categories = new categoriesDatabase();
               $categories = $categories->getCategories();  
         ?>    
     </table>
