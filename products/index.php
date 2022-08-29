@@ -1,31 +1,39 @@
-<?php include("classes/productsDatabase-class.php"); ?>
+<?php include("classes/shopDatabase-class.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parduotuvė</title>
+    <title>Products</title>
 </head>
 <body>
-    <h1>Parduotuvė</h1>
+    <h1>Products</h1>
     <table class="table table-striped">
         <tr>
-            <th>ID</th>
+            <th>Id</th>
             <th>Title</th>
             <th>Description</th>
             <th>Price</th>
-            <th>Category</th>
             <th>Image</th>
-            <th>Actions</th>
+            <th>Category</th>
         </tr>
-        <?php $products = new productsDatabase(); ?>
-        <?php $products->selectWithJoin("products", "categories","category_id", "id", "LEFT JOIN",["products.id", "products.title", "products.description", "products.image", "categories.title as categoryTitle"]); ?>
-        <?php $products->deleteProduct(); ?>
-        
+        <?php 
+            $products = new ShopDatabase();
+            $products = $products->getProducts();
+            foreach($products as $product) {
+        ?>
+            <tr>
+                <td><?php echo $product["id"]; ?></td>
+                <td><?php echo $product["title"]; ?></td>
+                <td><?php echo $product["description"]; ?></td>
+                <td><?php echo $product["price"]; ?></td>
+                <td><img src="<?php echo $product["image_url"]; ?>"/></td>
+                <td><?php echo $product["categoryTitle"]; ?></td>
+                <td>Tuščias Žaislai vaikams</td>
+            </tr>
+        <?php }
+        ?>
     </table>
-    
-    <!-- <button class="btn btn-primary" type="submit" name="generuoti">Generuoti</button> -->
-
 </body>
 </html>

@@ -6,12 +6,15 @@ class DatabaseConnection {
     private $password = "";
     private $database = "parduotuve";
 
-    protected $conn;
+    protected $conn; 
 
     public function __construct() {
         try {
             $this->conn = new PDO("mysql:host=$this->host;dbname=$this->database", $this->user, $this->password);
+            $this->conn->exec("set names utf8");
+            // echo "Prisijungta prie duomenu bazes sekmingai";
         } catch(PDOException $e) {
+           // echo "Prisijungti prie duomenu bazes nepavyko: " . $e->getMessage();
         }
 
     }
@@ -19,7 +22,9 @@ class DatabaseConnection {
         try {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = "SELECT * FROM `$table` WHERE 1 ORDER BY $col $sortDir";
+            //pasiruosimas vykdyti
             $stmt = $this->conn->prepare($sql);
+            //vykdyti
             $stmt->execute();
 
             $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -35,11 +40,13 @@ class DatabaseConnection {
 
 
         $cols = implode(",", $cols);
-        $values = implode(",", $values);
+        //masyva pavercia i teksta per skirtuka ["title", "description"] => "title,description"
+        $values = implode(",", $values);//  ["test", "test"] => "test,test"
 
         try {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql= "INSERT INTO `$table` ($cols) VALUES ($values)";
+            //var_dump($sql);
             $this->conn->exec($sql);
             echo "Pavyko sukurti nauja irasa";
 
@@ -63,13 +70,16 @@ class DatabaseConnection {
 
     public function updateAction($table, $id, $data) {
         $cols = array_keys($data);
+        //var_dump($cols);
         $values = array_values($data);
+        //var_dump($values);
 
         $dataString = [];
         for ($i=0; $i<count($cols); $i++) {
            $dataString[] = $cols[$i] . " = '" . $values[$i]. "'";
         }
         $dataString = implode(",", $dataString);
+       // var_dump($dataString);
 
 
        try{
@@ -98,14 +108,17 @@ class DatabaseConnection {
         }
     }
 
-    public function selectWithJoin($table1, $table2, $table1RelationCol, $table2RelationCol, $join, $cols) {
+    public function selectWithJoin($table1, $table2, $table1RelationCol, $table2RelationCol, $join, $cols, $sortCol="id", $sortDir="ASC") {
 
-        $cols = implode(",", $cols); 
+        $cols = implode(",", $cols);
+
         try {
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = "SELECT $cols FROM $table1 
             $join $table2
-            ON $table1.$table1RelationCol = $table2.$table2RelationCol";
+            ON $table1.$table1RelationCol = $table2.$table2RelationCol;
+            ORDER BY $sortCol $sortDir";
+            
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -119,8 +132,8 @@ class DatabaseConnection {
 
     public function __destruct() {
         $this->conn = null;
+       // echo "Atjungta is duomenu bazes sekmingai";
     }
-
 
 }
 
